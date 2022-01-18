@@ -168,7 +168,6 @@ class Request
             'token' => $this->shakeHandToken
         );
         $rawData = array_merge($rawData, $commonBody);
-        echo json_encode($rawData);
     }
 
     /**
