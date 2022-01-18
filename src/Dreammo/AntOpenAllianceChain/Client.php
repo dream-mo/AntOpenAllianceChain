@@ -350,7 +350,7 @@ class Client
     public function queryReceiptParseOutput($txHash, $abi, $vmTypeEnum = 'EVM')
     {
         $body = $this->queryReceipt($txHash);
-        if ($body['suceesss'] === true && $body['code'] == 200) {
+        if ($body['success'] === true && $body['code'] == 200) {
             $data = json_decode($body['data'], true);
             $output = $data['output'];
             $content = base64_encode(hex2bin($output));
