@@ -353,7 +353,7 @@ class Client
         if ($body['success'] === true && $body['code'] == 200) {
             $data = json_decode($body['data'], true);
             $output = $data['output'];
-            $content = base64_encode(hex2bin($output));
+            $content = bin2hex(base64_encode($output));
             return $this->parseOutput($vmTypeEnum, $content, $abi);
         } else {
             return false;
