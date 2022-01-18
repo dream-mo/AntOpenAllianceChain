@@ -1,0 +1,19 @@
+{
+    "name": "dreammo/ant-open-alliance-chain",
+    "description": "蚂蚁链开放联盟链 HTTP接入方式 PHP SDK",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Dreammo\\AntOpenAllianceChain\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "dreammo",
+            "email": "dreammovip@163.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
