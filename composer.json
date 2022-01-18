@@ -15,5 +15,9 @@
         }
     ],
     "minimum-stability": "stable",
-    "require": {}
+    "require": {
+        "rmccue/requests": "^2.0",
+        "ext-openssl": "*",
+        "ext-json": "*"
+    }
 }
