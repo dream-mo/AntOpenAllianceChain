@@ -1,6 +1,6 @@
 <?php
 
-require_once "./vendor/autoload.php";
+require_once "../vendor/autoload.php";
 
 $request = \Dreammo\AntOpenAllianceChain\Request::getInstance('accessId', 'accessKeyContent');
 // 开启握手获取通信token
