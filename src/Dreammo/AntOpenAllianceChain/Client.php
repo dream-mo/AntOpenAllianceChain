@@ -26,7 +26,7 @@ class Client
     {
         $this->requestInstance = $requestInstance;
         if (!$this->requestInstance->getShakeHandToken()){
-            $this->shakeHand();
+            $this->requestInstance->shakeHand();
         }
     }
 
