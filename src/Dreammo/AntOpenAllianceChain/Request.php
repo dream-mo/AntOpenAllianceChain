@@ -12,7 +12,7 @@ use WpOrg\Requests\Requests;
  * 蚂蚁链开发联盟链-底层HTTP接口请求类
  *
  */
-class Request
+class Request implements RequestInterface
 {
     private static $instance = null;
 
