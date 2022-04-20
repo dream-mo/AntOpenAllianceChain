@@ -25,6 +25,9 @@ class Client
     public function __construct(RequestInterface $requestInstance)
     {
         $this->requestInstance = $requestInstance;
+        if (!$this->requestInstance->getShakeHandToken()){
+            $this->shakeHand();
+        }
     }
 
     /**

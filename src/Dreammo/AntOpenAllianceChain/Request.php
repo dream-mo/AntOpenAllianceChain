@@ -45,21 +45,56 @@ class Request implements RequestInterface
      * @return mixed
      * @throws \Exception
      *
-     * 统一请求入口
+     * 非握手接口, 统一请求入口
      *
      */
     private function requests($uri, $data = [], $method = Requests::POST, $headers = [])
     {
+        if (!$this->tokenIsValid()) {
+            $this->shakeHand();
+        }
+
         $url = $this->antBaseUrl . $uri;
         $commonHeaders = [
             'Content-Type' => 'application/json;charset=utf-8'
         ];
+        $this->assemblyRequestData($data);
         if (!is_string($data)) {
             $data = json_encode($data, JSON_UNESCAPED_UNICODE);
         }
         $headers = array_merge($headers, $commonHeaders);
+
         try {
             $response = Requests::request($url, $headers, $data, $method);
+            if ($response->body) {
+                $result_data = json_decode($response->body, true);
+                if (json_last_error()) {
+                    throw new \Exception('Requests error:  response text is ' . $response->body);
+                }
+                return $result_data;
+            } else {
+                throw new \Exception('Requests error:  response text is ' . $response->body);
+            }
+        } catch (\Throwable $t) {
+            throw new \Exception($t->getMessage());
+        }
+    }
+
+    /**
+     * @param $uri
+     * @param array $data
+     * @return mixed
+     * @throws \Exception
+     *
+     */
+    private function post($uri, $data = [])
+    {
+        $url = $this->antBaseUrl . $uri;
+        try {
+            $headers = [
+                'Content-Type' => 'application/json;charset=utf-8'
+            ];
+            $response = Requests::post($url, $headers, json_encode($data, JSON_UNESCAPED_UNICODE));
             if ($response->body) {
                 $result_data = json_decode($response->body, true);
                 if (json_last_error()) {
@@ -89,7 +124,7 @@ class Request implements RequestInterface
             'time' => $this->getSpecificMilliseconds(),
             'secret' => $this->genSign()
         );
-        $body = $this->requests($uri, $data);
+        $body = $this->post($uri, $data);
         if ($body['success'] === true && $body['code'] == 200) {
             $this->shakeHandToken = $body['data'];
             return true;
@@ -119,7 +154,6 @@ class Request implements RequestInterface
     public function chainCallForBiz($data)
     {
         $uri = '/api/contract/chainCallForBiz';
-        $this->assemblyRequestData($data);
         $body = $this->requests($uri, $data);
         return $body;
     }
@@ -135,7 +169,6 @@ class Request implements RequestInterface
     public function chainCall($data)
     {
         $uri = '/api/contract/chainCall';
-        $this->assemblyRequestData($data);
         $body = $this->requests($uri, $data);
         return $body;
     }
@@ -196,5 +229,24 @@ class Request implements RequestInterface
         $mill_time = microtime();
         $timeInfo = explode(' ', $mill_time);
         return sprintf('%d%03d', $timeInfo[1], $timeInfo[0] * 1000);
+    }
+
+    /**
+     * @param int $range
+     * @return bool
+     *
+     * 判断token是否在有效范围时间内
+     */
+    private function tokenIsValid($range = 60)
+    {
+        if ($this->shakeHandToken) {
+            list($header, $payload_str, $signal) = explode('.', $this->shakeHandToken);
+            $payload = json_decode(base64_decode($payload_str), true);
+            $now = time();
+            $exp = intval($payload['exp']);
+            return ($exp - $now) > $range ? true : false;
+        }else{
+            return false;
+        }
     }
 }
