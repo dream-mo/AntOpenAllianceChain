@@ -12,17 +12,17 @@ namespace Dreammo\AntOpenAllianceChain;
 class Client
 {
     /**
-     * @var Request|null
+     * @var RequestInterface|null
      *
      */
     private $requestInstance = null;
 
     /**
      * AntOpenAllianceChainApiClient constructor.
-     * @param Request $requestInstance
+     * @param RequestInterface $requestInstance
      *
      */
-    public function __construct(Request $requestInstance)
+    public function __construct(RequestInterface $requestInstance)
     {
         $this->requestInstance = $requestInstance;
     }
